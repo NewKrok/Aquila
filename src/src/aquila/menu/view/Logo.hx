@@ -28,12 +28,12 @@ class Logo extends Flow
 
 	function build()
 	{
-		this.logoImage = new Bitmap(AppConfig.isLayoutSmall() ? Res.image.ui.logo_small.toTile() : Res.image.ui.logo.toTile(), this);
-		this.logoImage.smooth = false;
+		//this.logoImage = new Bitmap(AppConfig.isLayoutSmall() ? Res.image.ui.logo_small.toTile() : Res.image.ui.logo.toTile(), this);
+		//this.logoImage.smooth = false;
 
 
 		var tf:Text = new Text( AppConfig.isLayoutSmall() ? Fonts.DEFAULT_ES : Fonts.DEFAULT_S, this);
 		tf.text = "@2018-All rights reserved.";
-		tf.y = logoImage.y + logoImage.tile.height + 5;
+		//tf.y = logoImage.y + logoImage.tile.height + 5;
 	}
 }

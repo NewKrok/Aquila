@@ -1,7 +1,6 @@
 package aquila.game.data;
 
 import h2d.Tile;
-import haxe.ds.Map;
 import hxd.Res;
 
 /**
