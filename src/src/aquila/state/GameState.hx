@@ -22,6 +22,7 @@ import aquila.game.ui.GameUi;
 import aquila.game.util.CrystalCalculator;
 import hpp.heaps.Base2dState;
 import hpp.heaps.util.SpriteUtil;
+import hpp.util.GeomUtil;
 
 /**
  * ...
@@ -164,8 +165,27 @@ class GameState extends Base2dState
 
 	function updateSpaceShip(delta:Float)
 	{
-		spaceShip.x += (spaceShipMoveTargetPoint.x - spaceShip.x) / spaceShip.currentSpeed * delta;
-		spaceShip.y += (spaceShipMoveTargetPoint.y - spaceShip.y) / spaceShip.currentSpeed * delta;
+		var dist = GeomUtil.getDistance(
+			{ x: spaceShipMoveTargetPoint.x, y: spaceShipMoveTargetPoint.y },
+			{ x: spaceShip.x, y: spaceShip.y }
+		);
+		var angle = GeomUtil.getAngle(
+			{ x: spaceShip.x, y: spaceShip.y },
+			{ x: spaceShipMoveTargetPoint.x, y: spaceShipMoveTargetPoint.y }
+		);
+		var speedRatio = dist / 1000;
+
+		if (dist < spaceShip.currentSpeed)
+		{
+			spaceShip.x = spaceShipMoveTargetPoint.x;
+			spaceShip.y = spaceShipMoveTargetPoint.y;
+		}
+		else
+		{
+			// TODO handle time delta
+			spaceShip.x += spaceShip.currentSpeed * Math.cos(angle);
+			spaceShip.y += spaceShip.currentSpeed * Math.sin(angle);
+		}
 
 		spaceShip.x = Math.min(spaceShip.x, AppConfig.APP_WIDTH);
 		spaceShip.y = Math.min(spaceShip.y, AppConfig.APP_HEIGHT);

@@ -68,14 +68,14 @@ class BaseSpaceShip extends BaseGraphicsHolder
 
 	function makeDecoration()
 	{
-		if (config.decoration != null)
+		if (config.decorations != null)
 		{
-			for (decorationData in config.decoration)
+			for (decorationData in config.decorations)
 			{
-				var decoration:Anim = AnimationConfig.getAnimation(decorationData.animationId, this);
+				var decoration:Anim = AnimationConfig.getAnimation(decorationData.id, this);
 				decoration.setScale(AppConfig.GAME_BITMAP_SCALE);
-				decoration.x = decorationData.dx;
-				decoration.y = decorationData.dy;
+				decoration.x = decorationData.point.x;
+				decoration.y = decorationData.point.y;
 			}
 		}
 	}
