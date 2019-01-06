@@ -11,18 +11,21 @@ import aquila.game.data.FireModeDatas;
 import aquila.game.data.SpaceshipConfigs.SpaceshipConfig;
 import aquila.game.data.TileConfig;
 import hpp.heaps.util.TileUtil;
+import hpp.ui.HAlign;
+import hpp.ui.VAlign;
 import hxd.Res;
+import tink.state.State;
 
 /**
  * ...
  * @author Krisztian Somoracz
  */
-class BaseSpaceShip extends BaseGraphicsHolder
+class BaseSpaceShip extends BaseBitmapHolder
 {
 	public var currentSpeed(get, null):Float;
 	public var currentFireRate(get, null):Float;
 	public var currentMissileFireRate(get, null):Float;
-	public var currentLife(default, null):Float;
+	public var currentLife(default, null):State<Float> = new State<Float>(0);
 	public var isInvulnerable(default, null):Bool;
 	public var isRemoved(default, null):Bool;
 	public var config(default, null):SpaceshipConfig;
@@ -59,10 +62,10 @@ class BaseSpaceShip extends BaseGraphicsHolder
 		}
 		defaultFireMode = config.fireModeConfig.fireMode;
 
-		currentLife = config.maxLife;
+		currentLife.set(config.maxLife);
 		lastShootTime = lastMissileLaunchTime = Date.now().getTime();
 
-		makeGraphic(TileConfig.get(config.tile));
+		makeBitmap(TileConfig.get(config.tile), HAlign.CENTER, VAlign.MIDDLE);
 		makeDecoration();
 	}
 
@@ -89,10 +92,10 @@ class BaseSpaceShip extends BaseGraphicsHolder
 
 		if (config.chanceToDodge == 0 || Math.random() > config.chanceToDodge)
 		{
-			currentLife -= damage;
-			if (currentLife <= 0)
+			currentLife.set(currentLife.value - damage);
+			if (currentLife.value <= 0)
 			{
-				currentLife = 0;
+				currentLife.set(0);
 				isRemoved = true;
 				diedByEnemy = true;
 				onRemoveRequest(this);

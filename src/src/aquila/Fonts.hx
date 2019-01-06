@@ -16,9 +16,9 @@ class Fonts
 
 	public static function init()
 	{
-		DEFAULT_L  = Res.font.EllipticaLight.build(18);
-		DEFAULT_M  = Res.font.EllipticaLight.build(16);
-		DEFAULT_S  = Res.font.EllipticaLight.build(13);
-		DEFAULT_ES = Res.font.EllipticaLight.build(10);
+		DEFAULT_L  = Res.font.ariblk.build(18);
+		DEFAULT_M  = Res.font.ariblk.build(16);
+		DEFAULT_S  = Res.font.ariblk.build(13);
+		DEFAULT_ES = Res.font.ariblk.build(10);
 	}
 }

@@ -11,7 +11,6 @@ import aquila.menu.substate.PilotRankPage;
 import aquila.menu.substate.SettingsPage;
 import aquila.menu.substate.WelcomePage;
 import aquila.menu.view.Background;
-import aquila.menu.view.Logo;
 import aquila.menu.view.MenuHeader;
 import hpp.heaps.Base2dState;
 import hpp.heaps.Base2dSubState;
@@ -28,7 +27,6 @@ class MenuState extends Base2dState
 	var campaignPage:CampaignPage;
 
 	var menuHeader:MenuHeader;
-	var logo:Flow;
 	var light:Graphics;
 	var background:Background;
 
@@ -37,7 +35,7 @@ class MenuState extends Base2dState
 
 	override function build()
 	{
-		this.background = new Background(stage);
+		background = new Background(stage);
 
 		backgroundLoopMusic = if (Sound.supportedFormat(Mp3)) Res.sound.Eerie_Cyber_World_Looping else null;
 		subStateChangeSound = if (Sound.supportedFormat(Mp3)) Res.sound.UI_Quirky20 else null;
@@ -95,33 +93,7 @@ class MenuState extends Base2dState
 
 	override function onSubStateChanged(activeSubState:Base2dSubState):Void
 	{
-		menuHeader.visible = true;
-
-		this.repositionAndResizeLogo();
-	}
-
-	private function repositionAndResizeLogo()
-	{
-		if ( AppConfig.shouldChangeLayoutSize() )
-		{
-			if ( this.logo != null )
-			{
-				this.logo.remove();
-			}
-
-			this.logo = new Logo(stage);
-			this.logo.x = 50;
-		}
-
-		if (activeSubState == welcomePage)
-		{
-			logo.y = stage.height - 200;
-			menuHeader.visible = false;
-		}
-		else
-		{
-			logo.y = AppConfig.isLayoutSmall() ? 70 : 100;
-		}
+		menuHeader.visible = activeSubState != welcomePage;
 	}
 
 	override public function onStageResize(width:UInt, height:UInt)
@@ -129,9 +101,6 @@ class MenuState extends Base2dState
 		super.onStageResize(width, height);
 
 		menuHeader.onStageResize();
-
-		repositionAndResizeLogo();
-		background.resizeAndScale();
 
 		menuHeader.y = AppConfig.isLayoutSmall() ? 150 : 200;
 	}

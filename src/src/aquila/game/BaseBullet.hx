@@ -2,7 +2,7 @@ package aquila.game;
 
 import aquila.AppConfig;
 import h2d.Tile;
-import aquila.game.BaseGraphicsHolder;
+import aquila.game.BaseBitmapHolder;
 import aquila.game.data.TileConfig;
 import hpp.util.GeomUtil.SimplePoint;
 
@@ -10,7 +10,7 @@ import hpp.util.GeomUtil.SimplePoint;
  * ...
  * @author Krisztian Somoracz
  */
-class BaseBullet extends BaseGraphicsHolder
+class BaseBullet extends BaseAnimationHolder
 {
 	public static inline var hitAreaRadius:UInt = 15;
 
@@ -18,6 +18,7 @@ class BaseBullet extends BaseGraphicsHolder
 	public var isSplitted(default, null):Bool;
 	public var isCritical(default, null):Bool;
 	public var config(default, null):BulletConfig;
+	public var isRemoved(default, null):Bool;
 
 	public var isOwnerIsPlayer:Bool;
 
@@ -39,14 +40,14 @@ class BaseBullet extends BaseGraphicsHolder
 		this.config = config;
 		this.angle = angle;
 
-		rotation = angle + Math.PI / 2;
+		rotation = angle;
 		xSpeed = config.speed * Math.cos(angle);
 		ySpeed = config.speed * Math.sin(angle);
 
 		life = config.maxLife == null ? 1 : config.maxLife;
 		config.criticalHitMultiplier = config.criticalHitMultiplier == null ? 1 : config.criticalHitMultiplier;
 
-		makeGraphic(TileConfig.get(config.tile));
+		makeAnimation(config.graphicId);
 	}
 
 	public function update(delta:Float)
@@ -56,7 +57,8 @@ class BaseBullet extends BaseGraphicsHolder
 
 		if ( x < -40 || x > AppConfig.APP_WIDTH + 40 || y < -40 || y > AppConfig.APP_HEIGHT + 40 )
 		{
-			onRemoveRequest( this );
+			isRemoved = true;
+			onRemoveRequest(this);
 		}
 	}
 
@@ -67,7 +69,8 @@ class BaseBullet extends BaseGraphicsHolder
 		if (life <= 0)
 		{
 			life = 0;
-			onRemoveRequest( this );
+			isRemoved = true;
+			onRemoveRequest(this);
 		}
 	}
 
@@ -89,7 +92,7 @@ class BaseBullet extends BaseGraphicsHolder
 }
 
 typedef BulletConfig = {
-	var tile:String;
+	var graphicId:String;
 	var speed:Float;
 	var damage:Float;
 	var firePoints:Array<SimplePoint>;

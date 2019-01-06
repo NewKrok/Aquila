@@ -1,7 +1,11 @@
 package aquila.menu.substate;
 
-import aquila.menu.view.WelcomeButton;
+import h2d.Bitmap;
 import hpp.heaps.Base2dSubState;
+import hpp.heaps.HppG;
+import hpp.heaps.ui.BaseButton;
+import hpp.util.Language;
+import hxd.Res;
 
 /**
  * ...
@@ -10,7 +14,8 @@ import hpp.heaps.Base2dSubState;
 class WelcomePage extends Base2dSubState
 {
 	var openFighterDock:Void->Void;
-	var welcomeButton:WelcomeButton;
+	var logo:Bitmap;
+	var button:BaseButton;
 
 	public function new(openFighterDock:Void->Void)
 	{
@@ -21,25 +26,21 @@ class WelcomePage extends Base2dSubState
 
 	override function build()
 	{
-		welcomeButton = new WelcomeButton(container, openFighterDock);
-		welcomeButton.onStageScale();
-	}
+		logo = new Bitmap(Res.image.common.logo.toTile());
+		container.addChild(logo);
+		logo.x = HppG.stage2d.width / 2 - logo.tile.width / 2;
+		logo.y = 100;
 
-	override public function onOpen()
-	{
-		rePosition();
-	}
+		var button = new BaseButton(container, {
+			onClick: function(_){ openFighterDock(); },
+			baseGraphic: Res.image.ui.menu.enter_dock_button.toTile(),
+			overGraphic: Res.image.ui.menu.enter_dock_button_over.toTile(),
+			font: Fonts.DEFAULT_M,
+			textOffset: { x: 0, y: 5.5 }
+		});
+		Language.registerTextHolder(cast button.label, "welcome_button");
 
-	function rePosition()
-	{
-		welcomeButton.onStageScale();
-
-		welcomeButton.x = stage.width / 2 - welcomeButton.getSize().width / 2;
-		welcomeButton.y = stage.height - welcomeButton.getSize().height - 50;
-	}
-
-	override public function onStageResize(width:Float, height:Float)
-	{
-		rePosition();
+		button.x = HppG.stage2d.width / 2 - button.getSize().width / 2;
+		button.y = HppG.stage2d.height - button.getSize().height - 100;
 	}
 }

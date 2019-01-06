@@ -18,15 +18,15 @@ class EnemiesData
 			{
 				id: "asd",
 				expReward: 5,
-				scoreReward: 10,
-				crystalReward: 4,
+				scoreReward: 5,
+				crystalReward: 1,
 				spaceShipConfig: SpaceshipConfigs.getSpaceshipConfig("1535737624855")
 			},
 			{
 				id: "qwe",
 				expReward: 5,
-				scoreReward: 10,
-				crystalReward: 10,
+				scoreReward: 4,
+				crystalReward: 1,
 				spaceShipConfig: SpaceshipConfigs.getSpaceshipConfig("1535737625655")
 			}
 		];

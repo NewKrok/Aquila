@@ -1,13 +1,13 @@
 package aquila.game;
 
 import aquila.AppConfig;
-import h2d.Bitmap;
+import h2d.Graphics;
 import h2d.Layers;
 import h2d.Particles.PartEmitMode;
 import h2d.Particles.ParticleGroup;
 import h2d.Particles.Particles;
 import h2d.Tile;
-import hxd.Res;
+import hpp.heaps.HppG;
 
 /**
  * ...
@@ -22,7 +22,7 @@ class Background
 
 	var parent:Layers;
 
-	var backBitmap:Bitmap;
+	var back:Graphics;
 	var tile:Tile;
 
 	var particles:Particles;
@@ -32,9 +32,10 @@ class Background
 	{
 		this.parent = parent;
 
-		backBitmap = new Bitmap(Res.image.game.background.bg_world_a.toTile(), parent);
-
-		tile = backBitmap.tile;
+		back = new Graphics(parent);
+		back.beginFill(0x000000);
+		back.drawRect(0, 0, HppG.stage2d.width, HppG.stage2d.height);
+		back.endFill();
 
 		particles = new Particles(parent);
 		particleGroup = new ParticleGroup(particles);
@@ -51,27 +52,14 @@ class Background
 		particleGroup.fadeOut = .5;
 
 		particles.addGroup(particleGroup);
-
-		onResize();
 	}
 
 	function set_xPercentOffset(value:Float):Float
 	{
 		xPercentOffset = value;
 
-		backBitmap.x = AppConfig.APP_HALF_WIDTH + xPercentOffset * TILE_MAX_OFFSET;
 		particles.x = xPercentOffset * PARTICLE_MAX_OFFSET;
 
 		return xPercentOffset;
-	}
-
-	public function onResize():Void
-	{
-		backBitmap.scaleX = backBitmap.scaleY = AppConfig._engineWidth / AppConfig.APP_WIDTH - .5;
-		backBitmap.x = AppConfig._engineWidth / 2;
-		backBitmap.y = AppConfig._engineHeight / 2;
-
-		tile.dx = cast -tile.width / 2;
-		tile.dy = cast -tile.height / 2;
 	}
 }

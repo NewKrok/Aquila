@@ -12,7 +12,6 @@
     <movie minorVersion="0" />
     <movie platform="JavaScript" />
     <movie background="#FFFFFF" />
-    <movie preferredSDK="Haxe 3.4.3;3.4.3;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
@@ -32,6 +31,7 @@
     <library name="-lib heaps" />
     <library name="-lib gsap" />
     <library name="-lib hpp" />
+    <library name="-lib tink_state" />
   </haxelib>
   <!-- Class files to compile (other referenced classes will automatically be included) -->
   <compileTargets>

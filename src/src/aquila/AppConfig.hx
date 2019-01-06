@@ -26,11 +26,6 @@ class AppConfig
 	public static var _engineWidth:Float;
 	public static var _engineHeight:Float;
 
-	public static var _backgroundWidth:Int;
-	public static var _backgroundHeight:Int;
-
-	private static var _backgroundResizeMarkers = [1024,1160,1280,1366,1600,1920,2200,2400,2560];
-
 	// First initialization run.
 	private static var init:Bool = true;
 
@@ -55,26 +50,6 @@ class AppConfig
 		}
 
 		init = true;
-
-		shouldBackgroundResize();
-	}
-
-	private static function shouldBackgroundResize()
-	{
-		for ( forcedWidth in _backgroundResizeMarkers )
-		{
-			if ( _engineWidth <= forcedWidth )
-			{
-				calcluateBackgroundSize( forcedWidth );
-				break;
-			}
-		}
-	}
-
-	private static function calcluateBackgroundSize( forcedWidth:Int )
-	{
-		_backgroundWidth  = forcedWidth;
-		_backgroundHeight = Math.round( ( BACKGROUND_ORIGIN_HEIGTH / BACKGROUND_ORIGIN_WIDTH ) * forcedWidth );
 	}
 
 	public static function shouldChangeLayoutSize():Bool

@@ -17,40 +17,40 @@ class CrystalDatas
 	{
 		datas = [
 			{
-				speed: 2,
+				speed: 200,
 				value: 1,
 				score: 10,
-				tile: Res.image.game.crystal.small_crystal.toTile()
+				tile: Res.image.common.crystal_a.toTile()
 			},
 			{
-				speed: 2,
+				speed: 200,
 				value: 5,
 				score: 50,
-				tile: Res.image.game.crystal.medium_crystal.toTile()
+				tile: Res.image.common.crystal_b.toTile()
 			},
 			{
-				speed: 2,
+				speed: 200,
 				value: 25,
 				score: 250,
-				tile: Res.image.game.crystal.large_crystal.toTile()
+				tile: Res.image.common.crystal_c.toTile()
 			},
 			{
-				speed: 2,
+				speed: 200,
 				value: 100,
 				score: 1000,
-				tile: Res.image.game.crystal.large_crystal.toTile()
+				tile: Res.image.common.crystal_c.toTile()
 			},
 			{
-				speed: 2,
+				speed: 200,
 				value: 500,
 				score: 5000,
-				tile: Res.image.game.crystal.large_crystal.toTile()
+				tile: Res.image.common.crystal_c.toTile()
 			},
 			{
-				speed: 2,
+				speed: 200,
 				value: 2500,
 				score: 25000,
-				tile: Res.image.game.crystal.large_crystal.toTile()
+				tile: Res.image.common.crystal_c.toTile()
 			}
 		];
 	}

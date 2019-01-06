@@ -17,7 +17,10 @@ class AnimationConfig
 	public static function init()
 	{
 		config = [
-			"fire_a" => { speed: 15, tiles: TileUtil.getHorizontalTile(Res.image.effects.fire_a.toTile(), 34, 24) }
+			"fire_a" => { speed: 15, tile: TileUtil.getVerticalTile(Res.image.effect.fire_a.toTile(), 34, 24) },
+			"explosion_a" => { speed: 15, tile: TileUtil.getHorizontalTile(Res.image.effect.explosion_a.toTile(), 108, 84), loop: false },
+			"bullet_a" => { speed: 10, tile: TileUtil.getHorizontalTile(Res.image.bullet.bullet_a.toTile(), 15, 8) },
+			"missle_a" => { speed: 10, tile: TileUtil.getHorizontalTile(Res.image.missile.missile_a.toTile(), 35, 14) }
 		];
 	}
 
@@ -25,11 +28,15 @@ class AnimationConfig
 	{
 		var config:AnimationData = config.get(id);
 
-		return new Anim(config.tiles, config.speed, parent);
+		var anim = new Anim(config.tile, config.speed, parent);
+		if (config.loop != null) anim.loop = config.loop;
+
+		return anim;
 	}
 }
 
 typedef AnimationData = {
-	var tiles:Array<Tile>;
+	var tile:Array<Tile>;
 	var speed:UInt;
+	@:optional var loop:Bool;
 }

@@ -2,7 +2,7 @@ package aquila.game;
 
 import aquila.AppConfig;
 import h2d.Tile;
-import aquila.game.BaseGraphicsHolder;
+import aquila.game.BaseBitmapHolder;
 import aquila.game.BaseSpaceShip;
 import aquila.game.data.TileConfig;
 import hpp.heaps.util.SpriteUtil;
@@ -12,10 +12,11 @@ import hpp.util.GeomUtil.SimplePoint;
  * ...
  * @author Krisztian Somoracz
  */
-class BaseMissile extends BaseGraphicsHolder
+class BaseMissile extends BaseAnimationHolder
 {
 	public var config(default, null):MissileConfig;
 	public var diedByEnemy(default, null):Bool = false;
+	public var isRemoved(default, null):Bool;
 
 	public var isOwnerIsPlayer:Bool;
 
@@ -36,20 +37,21 @@ class BaseMissile extends BaseGraphicsHolder
 		this.isOwnerIsPlayer = isOwnerIsPlayer;
 		this.config = config;
 
-		rotation = angle + Math.PI / 2;
+		rotation = angle;
 
 		life = config.maxLife == null ? 1 : config.maxLife;
 
 		config.reducedDamage = config.reducedDamage == null ? 0 : config.reducedDamage;
 		config.areaToReducedDamage = config.areaToReducedDamage == null ? 0 : config.areaToReducedDamage;
 
-		makeGraphic(TileConfig.get(config.tile));
+		makeAnimation(config.graphicId);
 	}
 
 	public function update(delta:Float):Void
 	{
 		if (y < -100 || y > AppConfig.APP_HEIGHT + 100)
 		{
+			isRemoved = true;
 			onRemoveRequest(this);
 			return;
 		}
@@ -58,12 +60,12 @@ class BaseMissile extends BaseGraphicsHolder
 
 		if (target == null)
 		{
-			x += config.speed * Math.cos(rotation - Math.PI / 2) * delta;
-			y += config.speed * Math.sin(rotation - Math.PI / 2) * delta;
+			x += config.speed * Math.cos(rotation) * delta;
+			y += config.speed * Math.sin(rotation) * delta;
 		}
 		else
 		{
-			var tmpAngle:Float = rotation - Math.PI / 2;
+			var tmpAngle:Float = rotation;
 			var rotationOffset:Float = config.rotationSpeed;
 			var angle:Float = Math.floor(Math.atan2(target.y - y, target.x - x));
 
@@ -90,7 +92,7 @@ class BaseMissile extends BaseGraphicsHolder
 				tmpAngle += rotationOffset;
 			}
 
-			rotation = tmpAngle + Math.PI / 2;
+			rotation = tmpAngle;
 			x += config.speed * Math.cos(tmpAngle) * delta;
 			y += config.speed * Math.sin(tmpAngle) * delta;
 		}
@@ -120,13 +122,14 @@ class BaseMissile extends BaseGraphicsHolder
 		{
 			life = 0;
 			diedByEnemy = true;
+			isRemoved = true;
 			onRemoveRequest(this);
 		}
 	}
 }
 
 typedef MissileConfig = {
-	var tile:String;
+	var graphicId:String;
 	var speed:Float;
 	var maxDamage:Float;
 	var rotationSpeed:Float;

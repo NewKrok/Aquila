@@ -20,6 +20,7 @@ import aquila.game.data.FireModeDatas.FireMode;
 import aquila.game.data.LevelData;
 import aquila.game.ui.GameUi;
 import aquila.game.util.CrystalCalculator;
+import haxe.Json;
 import hpp.heaps.Base2dState;
 import hpp.heaps.util.SpriteUtil;
 import hpp.util.GeomUtil;
@@ -70,7 +71,7 @@ class GameState extends Base2dState
 		ui = new GameUi(spaceShip, resumeRequest, pauseRequest, stage);
 
 		resizeGameContainer();
-		changeFireMode();
+		//changeFireMode();
 		reset();
 	}
 
@@ -107,7 +108,7 @@ class GameState extends Base2dState
 				case ActionType.ADD_ENEMY:
 					preloadEnemy(commonDelay, cast action.data);
 
-				case _:
+				case _: trace(">>>",action.type,Json.stringify(ActionType.ADD_ENEMY));
 			}
 		}
 	}
@@ -197,35 +198,30 @@ class GameState extends Base2dState
 
 	function updateBullets(delta:Float)
 	{
-		for (bullet in bullets)
+		var l = bullets.length;
+		var index:UInt = 0;
+		for (i in 0...l)
 		{
+			if (index > bullets.length - 1) break;
+
+			var bullet = bullets[index];
 			bullet.update(delta);
+
+			if (bullet.isRemoved)
+			{
+				index--;
+				continue;
+			}
+			index++;
 
 			if (bullet.isOwnerIsPlayer)
 			{
 				for (enemy in enemies)
 				{
-					// TODO: check this magic numbers, maybe we should calculate it more deeply
 					if (SpriteUtil.getDistance(enemy, bullet) <= enemy.config.hitAreaRadius)
 					{
-						// TODO: handle area damage
-						/*tmpDamage = bullet.damage * ( _rageIsActivated ? _spaceShip.damageMultiplierInRage : 1 );
-						if ( _spaceShip.bulletAreaDamageMultiplier > 0 )
-							areaDamage ( true, bullet.damage * ( _rageIsActivated ? _spaceShip.damageMultiplierInRage : 1 ) * _spaceShip.bulletAreaDamageMultiplier, _spaceShip.bulletAreaDamageRadius, _enemys[j] );*/
-
-						// TODO: handle multiple damage problem on the same enemy (if the bullet has more life)
 						enemy.hurt(bullet.currentDamage);
 						effectHandler.addBulletExplosion(bullet.x, bullet.y, .7);
-
-						// TODO: handle bullet split
-						/*if ( bullet.isSplitted ) {
-							_bullets.push ( _container.addChildAt ( new BulletC ( removeBulletRutin, true, 135, _spaceShip.damage ), 1 ) as BaseBullet );
-							_bullets[_bullets.length - 1].x = bullet.x - 10;
-							_bullets[_bullets.length - 1].y = bullet.y;
-							_bullets.push ( _container.addChildAt ( new BulletC ( removeBulletRutin, true, -135, _spaceShip.damage ), 1 ) as BaseBullet );
-							_bullets[_bullets.length - 1].x = bullet.x + 10;
-							_bullets[_bullets.length - 1].y = bullet.y;
-						}*/
 
 						bullet.hurt(1);
 						break;
@@ -257,9 +253,21 @@ class GameState extends Base2dState
 
 	function updateMissiles(delta:Float)
 	{
-		for (missile in missiles)
+		var l = missiles.length;
+		var index:UInt = 0;
+		for (i in 0...l)
 		{
+			if (index > missiles.length - 1) break;
+
+			var missile = missiles[index];
 			missile.update(delta);
+
+			if (missile.isRemoved)
+			{
+				index--;
+				continue;
+			}
+			index++;
 
 			if (missile.isOwnerIsPlayer)
 			{
@@ -352,7 +360,7 @@ class GameState extends Base2dState
 		{
 			var enemy:BaseEnemy = enemies[i];
 
-			if (enemy.currentFireRate != -1 && now - enemy.lastShootTime >= enemy.currentFireRate/* * ( _rageIsActivated ? _spaceShip.slowEnemysFireRate : 1 )*/)
+			if (enemy.currentFireRate > 0 && now - enemy.lastShootTime >= enemy.currentFireRate/* * ( _rageIsActivated ? _spaceShip.slowEnemysFireRate : 1 )*/)
 			{
 				enemy.lastShootTime = now;
 
@@ -391,11 +399,14 @@ class GameState extends Base2dState
 
 	function shoot(x:Float, y:Float, isOwnerIsPlayer:Bool, config:BulletConfig, angle:Float)
 	{
-		var bullet:BaseBullet = new BaseBullet(removeBulletRutin, isOwnerIsPlayer, config, angle);
-		gameContainer.addChild( bullet );
-		bullet.x = x;
-		bullet.y = y;
-		bullets.push(bullet);
+		for (p in config.firePoints)
+		{
+			var bullet:BaseBullet = new BaseBullet(removeBulletRutin, isOwnerIsPlayer, config, angle);
+			gameContainer.addChildAt(bullet, -1);
+			bullet.x = x + p.x;
+			bullet.y = y + p.y;
+			bullets.push(bullet);
+		}
 	}
 
 	function checkPlayerMissileLaunch()
@@ -414,7 +425,7 @@ class GameState extends Base2dState
 		{
 			var enemy:BaseEnemy = enemies[i];
 
-			if (enemy.currentMissileFireRate != 0 && now - enemy.lastMissileLaunchTime >= enemy.currentMissileFireRate)
+			if (enemy.currentMissileFireRate > 0 && now - enemy.lastMissileLaunchTime >= enemy.currentMissileFireRate)
 			{
 				enemy.lastMissileLaunchTime = now;
 
@@ -425,11 +436,14 @@ class GameState extends Base2dState
 
 	function launchMissile(x:Float, y:Float, enemies:Array<BaseSpaceShip>, isOwnerIsPlayer:Bool, config:MissileConfig, angle:Float)
 	{
-		var missile:BaseMissile = new BaseMissile(removeMissileRutin, enemies, isOwnerIsPlayer, config, angle);
-		gameContainer.addChild(missile);
-		missile.x = x;
-		missile.y = y;
-		missiles.push(missile);
+		for (p in config.firePoints)
+		{
+			var missile:BaseMissile = new BaseMissile(removeMissileRutin, enemies, isOwnerIsPlayer, config, angle);
+			gameContainer.addChildAt(missile, -1);
+			missile.x = x + p.x;
+			missile.y = y + p.y;
+			missiles.push(missile);
+		}
 	}
 
 	function checkCollisionDamage()
@@ -440,7 +454,7 @@ class GameState extends Base2dState
 			{
 				if (SpriteUtil.getDistance(enemy, spaceShip) < enemy.config.destroyRange)
 				{
-					spaceShip.hurt(enemy.config.maxLife);
+					spaceShip.hurt(enemy.config.maxLife * 2);
 					spaceShip.currentRage += spaceShip.rageConfig.ragePerCollisionKill;
 					enemy.hurt(spaceShip.config.maxLife);
 				}
@@ -538,7 +552,6 @@ class GameState extends Base2dState
 		super.onStageResize(width, height);
 
 		resizeGameContainer();
-		background.onResize();
 		ui.onResize();
 	}
 

@@ -15,12 +15,14 @@ class PlayerSpaceShip extends BaseSpaceShip
 
 	public function new(onRemoveRequest:BaseSpaceShip->Void)
 	{
-		crystalMagnetConfig = {
+		crystalMagnetConfig =
+		{
 			power: 5,
 			range: 300
 		};
 
-		rageConfig = {
+		rageConfig =
+		{
 			maxRage: 100,
 			ragePerSpaceShipKill: 4,
 			ragePerMissileKill: 1,
@@ -38,9 +40,15 @@ class PlayerSpaceShip extends BaseSpaceShip
 
 		return currentRage = value;
 	}
+
+	override public function hurt(damage:Float):Void
+	{
+		super.hurt(damage);
+	}
 }
 
-typedef RageConfig = {
+typedef RageConfig =
+{
 	var maxRage:UInt;
 	var ragePerSpaceShipKill:UInt;
 	var ragePerMissileKill:UInt;
@@ -49,7 +57,8 @@ typedef RageConfig = {
 	var ragePerCollisionKill:UInt;
 }
 
-typedef CrystalMagnetConfig = {
+typedef CrystalMagnetConfig =
+{
 	var power:Float;
 	var range:Float;
 }

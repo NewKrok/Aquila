@@ -4,13 +4,14 @@ import aquila.AppConfig;
 import com.greensock.TweenMax;
 import h2d.Layers;
 import h2d.Tile;
-import aquila.game.BaseGraphicsHolder;
+import aquila.game.BaseBitmapHolder;
+import hpp.heaps.HppG;
 
 /**
  * ...
  * @author Krisztian Somoracz
  */
-class BaseCrystal extends BaseGraphicsHolder
+class BaseCrystal extends BaseBitmapHolder
 {
 	public var crystalConfig(default, null):CrystalConfig;
 
@@ -28,10 +29,10 @@ class BaseCrystal extends BaseGraphicsHolder
 
 	public function init():Void
 	{
-		makeGraphic(crystalConfig.tile);
+		makeBitmap(crystalConfig.tile);
 
 		TweenMax.to(this, .2 + Math.random() * .4, {
-			x: x + Math.random() * 300 - 150,
+			x: Math.max(Math.min(x + Math.random() * 300 - 150, HppG.stage2d.width - 20), 20),
 			y: y + Math.random() * 300 - 150,
 			rotation: Math.random() * Math.PI * 2
 		});
@@ -39,7 +40,7 @@ class BaseCrystal extends BaseGraphicsHolder
 
 	public function update(delta:Float):Void
 	{
-		y += 2 * delta;
+		y += crystalConfig.speed * delta;
 		if (y > AppConfig.APP_HEIGHT) onRemoveRequest(this);
 	}
 

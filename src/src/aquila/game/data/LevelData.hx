@@ -1,4 +1,5 @@
 package aquila.game.data;
+import haxe.Json;
 
 /**
  * ...
@@ -7,12 +8,12 @@ package aquila.game.data;
 class LevelData
 {
 	private static var config:Array<Array<Action>> = [
-		untyped [{"type":{"_hx_index":2,"__enum__":"hle.ActionType"},"data":{"time":3}},{"type":{"_hx_index":3,"__enum__":"hle.ActionType"},"data":{"count":5,"enemyId":"1535737625655","attackLineId":"1512943091470","delay":1}},{"type":{"_hx_index":3,"__enum__":"hle.ActionType"},"data":{"count":5,"enemyId":"1535737625655","attackLineId":"1512943091471","delay":1}}]
+		untyped [{"type":{"_hx_index":2,"__enum__":"aquila.ActionType"},"data":{"time":5}},{"type":{"_hx_index":3,"__enum__":"aquila.ActionType"},"data":{"count":10,"enemyId":"1535737625655","attackLineId":"1515943764621","delay":0.5}},{"type":{"_hx_index":2,"__enum__":"aquila.ActionType"},"data":{"time":10}},{"type":{"_hx_index":3,"__enum__":"aquila.ActionType"},"data":{"count":10,"enemyId":"1535737625655","attackLineId":"1512943091471","delay":0.5}},{"type":{"_hx_index":2,"__enum__":"aquila.ActionType"},"data":{"time":5}},{"type":{"_hx_index":3,"__enum__":"aquila.ActionType"},"data":{"count":15,"enemyId":"1535737625655","attackLineId":"1512943374307","delay":0.5}},{"type":{"_hx_index":2,"__enum__":"aquila.ActionType"},"data":{"time":5}},{"type":{"_hx_index":3,"__enum__":"aquila.ActionType"},"data":{"count":5,"enemyId":"1535737625655","attackLineId":"1512943197428","delay":1}}]
 	];
 
 	public static function getLevelData(index:UInt):Array<Action>
 	{
-		return config[index];
+		return cast config[index];
 	}
 }
 
